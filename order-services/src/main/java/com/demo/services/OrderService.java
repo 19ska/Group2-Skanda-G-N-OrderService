@@ -16,6 +16,7 @@ public interface OrderService {
 //  ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(Long customerId);
 
   ResponseEntity<List<OrderDTO>> getAllOrders();
+  //comment
 
   ResponseEntity<Void> updateOrderStatus(Long orderId, OrderStatus newStatus);
 
