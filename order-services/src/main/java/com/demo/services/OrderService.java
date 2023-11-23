@@ -1,25 +1,23 @@
 package com.demo.services;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 
 import com.demo.dto.OrderDTO;
-import com.demo.entities.OrderStatus;
+
+import java.util.List;
 
 public interface OrderService {
-	
-	ResponseEntity<OrderDTO> createOrder(OrderDTO orderDTO);
+
+    ResponseEntity<OrderDTO> createOrder(Long userId, OrderDTO orderDTO);
 
     ResponseEntity<OrderDTO> getOrderById(Long orderId);
-    
-//  ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(Long customerId);
 
-  ResponseEntity<List<OrderDTO>> getAllOrders();
-  //comment
+    ResponseEntity<List<OrderDTO>> getOrdersByUserId(Long userId);
 
-  ResponseEntity<Void> updateOrderStatus(Long orderId, OrderStatus newStatus);
+    ResponseEntity<List<OrderDTO>> getAllOrders();
 
-  ResponseEntity<Void> deleteOrder(Long orderId);
+    ResponseEntity<Void> updateOrder(Long orderId, OrderDTO orderDTO);
 
+    ResponseEntity<Void> deleteOrder(Long orderId);
 }
+

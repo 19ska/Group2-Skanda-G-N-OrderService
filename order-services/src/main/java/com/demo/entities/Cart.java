@@ -1,120 +1,111 @@
 package com.demo.entities;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
-//import java.math.BigDecimal;
-//
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+//Cart entity
 @Entity
 public class Cart {
+ @Id
+ private long id;
+ 
+ private String key;// Unique cart key
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+ private Long userId;
 
-    @Column(unique = true)
-    private String key;
+ private Date date;
 
-    @ManyToOne
-    @JoinColumn
-    private Customers customer;
+ @OneToMany( cascade = CascadeType.ALL)
+ private List<LineItem> lineItems;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+ private double totalPrice;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private Set<LineItem> lineItems = new HashSet<>();
+ private String currency;
 
-    private double totalPrice;
+ private CartStatus cartStatus;
 
-    private String currency;
+public Cart() {
+	super();
+}
 
-    @Enumerated(EnumType.STRING)
-    private CartStatus cartStatus;
+public long getId() {
+	return id;
+}
 
-	public Cart() {
-		super();
-	}
+public void setId(long id) {
+	this.id = id;
+}
 
-	public Long getId() {
-		return id;
-	}
+public String getKey() {
+	return key;
+}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+public void setKey(String key) {
+	this.key = key;
+}
 
-	public String getKey() {
-		return key;
-	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
 
-	public Date getDate() {
-		return date;
-	}
+public Long getUserId() {
+	return userId;
+}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+public void setUserId(Long userId) {
+	this.userId = userId;
+}
 
-	public double getTotalPrice() {
-		return totalPrice;
-	}
+public Date getDate() {
+	return date;
+}
 
-	public void setTotalPrice(double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+public void setDate(Date date) {
+	this.date = date;
+}
 
-	public String getCurrency() {
-		return currency;
-	}
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
 
-	public CartStatus getCartStatus() {
-		return cartStatus;
-	}
+public List<LineItem> getLineItems() {
+	return lineItems;
+}
 
-	public void setCartStatus(CartStatus cartStatus) {
-		this.cartStatus = cartStatus;
-	}
+public void setLineItems(List<LineItem> lineItems) {
+	this.lineItems = lineItems;
+}
 
-	public Customers getCustomer() {
-		return customer;
-	}
+public double getTotalPrice() {
+	return totalPrice;
+}
 
-	public void setCustomer(Customers customer) {
-		this.customer = customer;
-	}
+public void setTotalPrice(double totalPrice) {
+	this.totalPrice = totalPrice;
+}
 
-	public Set<LineItem> getLineItems() {
-		return lineItems;
-	}
+public String getCurrency() {
+	return currency;
+}
 
-	public void setLineItems(Set<LineItem> lineItems) {
-		this.lineItems = lineItems;
-	}
+public void setCurrency(String currency) {
+	this.currency = currency;
+}
 
-    // Other cart-related fields if needed
+public CartStatus getCartStatus() {
+	return cartStatus;
+}
 
-    // Constructors, getters, and setters
+public void setCartStatus(CartStatus cartStatus) {
+	this.cartStatus = cartStatus;
+}
+
+
+
+
+
+
+ 
 }

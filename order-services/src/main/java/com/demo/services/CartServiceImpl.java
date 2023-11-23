@@ -1,91 +1,91 @@
 package com.demo.services;
 
+import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.demo.dto.CartDTO;
+import com.demo.dto.LineItemDTO;
 import com.demo.entities.Cart;
-import com.demo.entities.Customers;
+import com.demo.entities.CartStatus;
+import com.demo.entities.LineItem;
 import com.demo.repositories.CartRepository;
-import com.demo.repositories.CustomerRepository;
+
+
+import org.modelmapper.ModelMapper;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
-	@Autowired
-	private CartRepository cartRepository;
-	
-	@Autowired
-    private CustomerRepository customerRepository;
-    
+
+    private final CartRepository cartRepository;
+    private final ModelMapper modelMapper;
+
     @Autowired
-    private ModelMapper modelMapper;
-    
-    @Override
-    public ResponseEntity<CartDTO> createCart(Long customerId, CartDTO cartDTO) {
-    	Customers customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + customerId));
-
-        Cart cart = modelMapper.map(cartDTO, Cart.class);
-        cart.setCustomer(customer);
-    	Cart savedCart = cartRepository.save(cart); // Assuming 
-
-        CartDTO responseDTO = modelMapper.map(savedCart, CartDTO.class);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
-		
+    public CartServiceImpl(CartRepository cartRepository, ModelMapper modelMapper) {
+        this.cartRepository = cartRepository;
+        this.modelMapper = modelMapper;
     }
+
+    @Override
+    public ResponseEntity<CartDTO> createCart(Long userId, CartDTO cartDTO) {
+        Cart cart = modelMapper.map(cartDTO, Cart.class);
+        cart.setUserId(userId);
+        cartRepository.save(cart);
+
+        CartDTO createdCartDTO = modelMapper.map(cart, CartDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCartDTO);
+    }
+
     @Override
     public ResponseEntity<CartDTO> getCartById(Long cartId) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + cartId));
-
+        Cart cart = getCartEntityById(cartId);
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
-        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(cartDTO);
     }
 
     @Override
-    public ResponseEntity<List<CartDTO>> getCartsByCustomerId(Long customerId) {
-        Optional<Cart> carts = cartRepository.findById(customerId);
-        List<CartDTO> cartDTOs = carts.stream()
-                .map(cart -> modelMapper.map(cart, CartDTO.class))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(cartDTOs, HttpStatus.OK);
+    public ResponseEntity<List<CartDTO>> getCartsByUserId(Long userId) {
+        List<Cart> carts = cartRepository.findByUserId(userId);
+        List<CartDTO> cartDTOs = carts.stream().map(cart -> modelMapper.map(cart, CartDTO.class)).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(cartDTOs);
     }
 
     @Override
-      public ResponseEntity<List<CartDTO>> getAllCarts() {
+    public ResponseEntity<List<CartDTO>> getAllCarts() {
         List<Cart> carts = cartRepository.findAll();
-        List<CartDTO> cartDTOs = carts.stream()
-                .map(cart -> modelMapper.map(cart, CartDTO.class))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(cartDTOs, HttpStatus.OK);
+        List<CartDTO> cartDTOs = carts.stream().map(cart -> modelMapper.map(cart, CartDTO.class)).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(cartDTOs);
     }
 
     @Override
     public ResponseEntity<Void> updateCart(Long cartId, CartDTO cartDTO) {
-        Cart existingCart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + cartId));
+        Cart existingCart = getCartEntityById(cartId);
 
-        // Update existingCart fields with values from cartDTO
+        // Update fields based on your requirements
         modelMapper.map(cartDTO, existingCart);
 
         cartRepository.save(existingCart);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
     public ResponseEntity<Void> deleteCart(Long cartId) {
-        cartRepository.deleteById(cartId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Cart cart = getCartEntityById(cartId);
+        cartRepository.delete(cart);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-   
 
+    private Cart getCartEntityById(Long cartId) {
+        return cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart not found with id: " + cartId));
+    }
 }
