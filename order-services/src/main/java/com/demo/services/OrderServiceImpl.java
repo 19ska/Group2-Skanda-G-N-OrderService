@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<Void> updateOrder(Long orderId, OrderDTO orderDTO) {
         Orders existingOrder = getOrderEntityById(orderId);
 
-        // Update fields based on your requirements
+        // Update fields based on your requirement
         modelMapper.map(orderDTO, existingOrder);
 
         orderRepository.save(existingOrder);
