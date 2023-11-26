@@ -14,6 +14,7 @@ import com.demo.dto.LineItemDTO;
 import com.demo.entities.Cart;
 import com.demo.entities.CartStatus;
 import com.demo.entities.LineItem;
+import com.demo.exceptions.CartNotFoundException;
 import com.demo.repositories.CartRepository;
 
 
@@ -86,6 +87,6 @@ public class CartServiceImpl implements CartService {
 
     private Cart getCartEntityById(Long cartId) {
         return cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not found with id: " + cartId));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
     }
 }

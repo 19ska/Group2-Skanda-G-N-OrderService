@@ -3,7 +3,7 @@ package com.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.demo.exceptions.*;
 import com.demo.dto.OrderDTO;
 import com.demo.services.OrderService;
 
@@ -18,6 +18,11 @@ public class OrderController {
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+    
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException e) {
+        return ResponseEntity.status(404).body("Order not found: " + e.getMessage());
     }
 
     @PostMapping("/{userId}")

@@ -9,32 +9,42 @@ import jakarta.persistence.OneToOne;
 
 //Order entity
 @Entity
-public class Order {
- @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Long id;
+public class Orders {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long orderId;
 
- @OneToOne
- @JoinColumn
- private Cart cart;
+	    @OneToOne
+	    @JoinColumn
+	    private Cart cart;
 
- private double totalPrice;
+	    private double totalPrice;
 
- private String paymentStatus;
+	    private String paymentStatus;
 
- private String orderStatus;
+	    private String orderStatus;
 
-public Order() {
+public Orders() {
 	super();
 }
 
-public Long getId() {
-	return id;
+
+
+
+
+public Long getOrderId() {
+	return orderId;
 }
 
-public void setId(Long id) {
-	this.id = id;
+
+
+
+
+public void setOrderId(Long orderId) {
+	this.orderId = orderId;
 }
+
+
 
 
 

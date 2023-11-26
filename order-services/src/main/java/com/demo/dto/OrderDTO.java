@@ -3,24 +3,33 @@ package com.demo.dto;
 import com.demo.entities.Cart;
 
 public class OrderDTO {
-    private Cart cart;
+     private Long cartId;
     private double totalPrice;
     private String paymentStatus;
     private String orderStatus;
-    private Long userId;
+    private Long customerId;
 	public OrderDTO() {
 		super();
 	}
 	
 	
-	public Cart getCart() {
-		return cart;
+	
+
+
+	public Long getCartId() {
+		return cartId;
 	}
 
 
-	public void setCart(Cart cart) {
-		this.cart = cart;
+
+
+
+	public void setCartId(Long cartId) {
+		this.cartId = cartId;
 	}
+
+
+
 
 
 	public double getTotalPrice() {
@@ -41,12 +50,23 @@ public class OrderDTO {
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-	public Long getUserId() {
-		return userId;
+
+
+
+
+
+	public Long getCustomerId() {
+		return customerId;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
+
+
+
+
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
+	
 
     
     

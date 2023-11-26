@@ -1,6 +1,7 @@
 package com.demo.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import com.demo.entities.CartStatus;
 
@@ -11,6 +12,7 @@ public class CartDTO {
     private double totalPrice;
     private String currency;
     private CartStatus cartStatus;
+    private List<LineItemDTO> lineItems;
 	public CartDTO() {
 		super();
 	}
@@ -49,6 +51,12 @@ public class CartDTO {
 	}
 	public void setCartStatus(CartStatus cartStatus) {
 		this.cartStatus = cartStatus;
+	}
+	public List<LineItemDTO> getLineItems() {
+		return lineItems;
+	}
+	public void setLineItems(List<LineItemDTO> lineItems) {
+		this.lineItems = lineItems;
 	}
 	
     

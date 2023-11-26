@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.demo.dto.CartDTO;
 import com.demo.services.CartService;
+import com.demo.exceptions.*;
 
 import java.util.List;
 
@@ -18,6 +19,11 @@ public class CartController {
     @Autowired
     public CartController(CartService cartService) {
         this.cartService = cartService;
+    }
+    
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<String> handleCartNotFoundException(CartNotFoundException e) {
+        return ResponseEntity.status(404).body("Cart not found: " + e.getMessage());
     }
 
     @PostMapping("/{userId}")

@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.demo.dto.OrderDTO;
-import com.demo.entities.Order;
+import com.demo.exceptions.*;
+import com.demo.entities.Orders;
 import com.demo.repositories.OrderRepository;
 
 import java.util.List;
@@ -24,12 +25,15 @@ public class OrderServiceImpl implements OrderService {
     public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
+       
+
+
     }
 
     @Override
     public ResponseEntity<OrderDTO> createOrder(Long userId, OrderDTO orderDTO) {
-        Order order = modelMapper.map(orderDTO, Order.class);
-        order.setId(userId);
+        Orders order = modelMapper.map(orderDTO, Orders.class);
+       // order.setOrderId(userId);
         orderRepository.save(order);
 
         OrderDTO createdOrderDTO = modelMapper.map(order, OrderDTO.class);
@@ -38,28 +42,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<OrderDTO> getOrderById(Long orderId) {
-        Order order = getOrderEntityById(orderId);
+        Orders order = getOrderEntityById(orderId);
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
     }
 
     @Override
     public ResponseEntity<List<OrderDTO>> getOrdersByUserId(Long userId) {
-        Optional<Order> orders = orderRepository.findById(userId);
+        Optional<Orders> orders = orderRepository.findById(userId);
         List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(orderDTOs);
     }
 
     @Override
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
+        List<Orders> orders = orderRepository.findAll();
         List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(orderDTOs);
     }
 
     @Override
     public ResponseEntity<Void> updateOrder(Long orderId, OrderDTO orderDTO) {
-        Order existingOrder = getOrderEntityById(orderId);
+        Orders existingOrder = getOrderEntityById(orderId);
 
         // Update fields based on your requirements
         modelMapper.map(orderDTO, existingOrder);
@@ -70,13 +74,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<Void> deleteOrder(Long orderId) {
-        Order order = getOrderEntityById(orderId);
+        Orders order = getOrderEntityById(orderId);
         orderRepository.delete(order);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    private Order getOrderEntityById(Long orderId) {
+    private Orders getOrderEntityById(Long orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + orderId));
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.demo.dto.LineItemDTO;
 import com.demo.entities.Cart;
 import com.demo.entities.LineItem;
+import com.demo.exceptions.CartNotFoundException;
+import com.demo.exceptions.*;
 import com.demo.repositories.CartRepository;
 import com.demo.repositories.LineItemRepository;
 
@@ -28,6 +30,7 @@ public class LineItemServiceImpl implements LineItemService {
         this.lineItemRepository = lineItemRepository;
         this.modelMapper = modelMapper;
     }
+    
 
     @Override
     public ResponseEntity<LineItemDTO> addLineItem(Long cartId, LineItemDTO lineItemDTO) {
@@ -91,11 +94,11 @@ public class LineItemServiceImpl implements LineItemService {
 
     private Cart getCartEntityById(Long cartId) {
         return cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not found with id: " + cartId));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
     }
 
     private LineItem getLineItemEntityById(Long lineItemId) {
         return lineItemRepository.findById(lineItemId)
-                .orElseThrow(() -> new RuntimeException("LineItem not found with id: " + lineItemId));
+                .orElseThrow(() -> new LineItemNotFoundException("LineItem not found with id: " + lineItemId));
     }
 }

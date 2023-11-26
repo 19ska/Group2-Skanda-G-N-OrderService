@@ -3,14 +3,14 @@ package com.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.demo.exceptions.*;
 import com.demo.dto.LineItemDTO;
 import com.demo.services.LineItemService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/carts")
+@RequestMapping("/api/lineItems")
 public class LineItemController {
 
     private final LineItemService lineItemService;
@@ -18,6 +18,16 @@ public class LineItemController {
     @Autowired
     public LineItemController(LineItemService lineItemService) {
         this.lineItemService = lineItemService;
+    }
+    
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<String> handleCartNotFoundException(CartNotFoundException e) {
+        return ResponseEntity.status(404).body("Cart not found: " + e.getMessage());
+    }
+    
+    @ExceptionHandler(LineItemNotFoundException.class)
+    public ResponseEntity<String> handleLineItemNotFoundException(LineItemNotFoundException e) {
+        return ResponseEntity.status(404).body("LineItem not found: " + e.getMessage());
     }
 
     @PostMapping("/{cartId}/line-items")
